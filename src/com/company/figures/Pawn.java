@@ -4,6 +4,8 @@ import com.company.board.Chess;
 import com.company.board.Location;
 import com.company.types.Side;
 
+import java.util.Random;
+
 public class Pawn extends ChessFigure {
 
     public Pawn(int x_coord, int y_coord, Side side, Chess chess) {
@@ -50,6 +52,8 @@ public class Pawn extends ChessFigure {
     public boolean kill() {
         int maxValue = 0;
         Location locationToKill = null;
+        if (locationsToMove.isEmpty()) return false;
+
         for (Location location:
              locationsToMove) {
             //TODO this null return
@@ -72,6 +76,15 @@ public class Pawn extends ChessFigure {
 
     @Override
     public boolean move() {
-        return false;
+        findAllPath();
+        weedOut();
+        if (!kill()){
+            if (locationsToMove.isEmpty()) return false;
+            Random random =new Random();
+            Location location = locationsToMove.get(random.nextInt(locationsToMove.size()-1));
+            x_coord = location.getX_coord();
+            y_coord = location.getY_coord();
+        }
+        return true;
     }
 }
