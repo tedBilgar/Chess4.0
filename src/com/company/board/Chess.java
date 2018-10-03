@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Chess {
     private List<ChessFigure> chessFigures;
-    private boolean isWhitemove;
+    private boolean isWhiteMove;
 
     public List<ChessFigure> getChessFigures() {
         return chessFigures;
@@ -17,12 +17,12 @@ public class Chess {
         this.chessFigures = chessFigures;
     }
 
-    public boolean isWhitemove() {
-        return isWhitemove;
+    public boolean isWhiteMove() {
+        return isWhiteMove;
     }
 
-    public void setWhitemove(boolean whitemove) {
-        isWhitemove = whitemove;
+    public void setWhitemove(boolean isWhiteMove) {
+        this.isWhiteMove = isWhiteMove;
     }
 
     public void getRandomFigure(){
