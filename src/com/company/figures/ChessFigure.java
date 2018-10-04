@@ -43,6 +43,10 @@ public abstract class ChessFigure {
         this.y_coord = y_coord;
     }
 
+    public Side getSide() {
+        return side;
+    }
+
     public int getGameValue() {
         return gameValue;
     }
@@ -51,4 +55,13 @@ public abstract class ChessFigure {
     public abstract void weedOut();
     public abstract boolean kill();
     public abstract boolean move();
+
+    @Override
+    public String toString() {
+        return "ChessFigure{" +
+                "x_coord=" + x_coord +
+                ", y_coord=" + y_coord +
+                ", side=" + side +
+                '}';
+    }
 }

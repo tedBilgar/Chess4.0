@@ -4,6 +4,7 @@ import com.company.board.Chess;
 import com.company.board.Location;
 import com.company.types.Side;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class Pawn extends ChessFigure {
@@ -27,24 +28,32 @@ public class Pawn extends ChessFigure {
     //TODO with null
     @Override
     public void weedOut() {
+        System.out.println("here");
+        System.out.println(locationsToMove);
+        for (int i = 0; i<locationsToMove.size() -1; i++) {
+            Location location = locationsToMove.get(i);
 
-        for (Location location :
-                    locationsToMove) {
-
-            if (location.getX_coord() <1 && location.getX_coord() > 8 || location.getY_coord() < 1 && location.getY_coord() > 8)
+            if (location.getX_coord() <1 || location.getX_coord() > 8 || location.getY_coord() < 1 || location.getY_coord() > 8) {
                 locationsToMove.remove(location);
+                continue;
+            }
 
             if ( (location.getX_coord() == x_coord - (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1
-                    || location.getX_coord() == x_coord + (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1)
-                    && chess.getChessFigureByCoord(location) == null)
+                    || location.getX_coord() == x_coord + (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1)) {
+                Optional<ChessFigure> chessFigure = Optional.ofNullable(chess.getChessFigureByCoord(location));
+                if (chessFigure.isPresent() && this.side == chessFigure.get().getSide() || !chessFigure.isPresent()){
+                    locationsToMove.remove(location);
+                    continue;
+                }
+            }
 
+            if ( location.getX_coord() == x_coord && (location.getY_coord() == y_coord + (sideCoeff)*1 || location.getY_coord() == y_coord + (sideCoeff)*2)
+                && chess.getChessFigureByCoord(location)!=null) {
                 locationsToMove.remove(location);
-
-            if ( location.getX_coord() == x_coord && location.getY_coord() == y_coord + (sideCoeff)*1
-                && chess.getChessFigureByCoord(location)!=null)
-
-                locationsToMove.remove(location);
+                continue;
+            }
         }
+        System.out.println("after weed " + locationsToMove);
 
     }
 
@@ -57,10 +66,16 @@ public class Pawn extends ChessFigure {
         for (Location location:
              locationsToMove) {
             //TODO this null return
-            int curValue = chess.getChessFigureByCoord(location).getGameValue();
-            if (curValue > maxValue){
-                maxValue = curValue;
-                locationToKill = location;
+            Optional<ChessFigure> chessFigure = Optional.ofNullable(chess.getChessFigureByCoord(location));
+            if (chessFigure.isPresent()) {
+                int curValue = chessFigure.get().getGameValue();
+                if(chessFigure.get().getX_coord() ==  (this.x_coord - (sideCoeff) * 1)||chessFigure.get().getX_coord() ==  (this.x_coord + (sideCoeff) * 1)
+                        && chessFigure.get().getY_coord() == (this.y_coord + (sideCoeff) *1)) {
+                    if (curValue > maxValue) {
+                        maxValue = curValue;
+                        locationToKill = location;
+                    }
+                }
             }
         }
         if (maxValue != 0) {
@@ -68,6 +83,7 @@ public class Pawn extends ChessFigure {
             this.x_coord = chessFigureToKill.getX_coord();
             this.y_coord = chessFigureToKill.getY_coord();
             chess.getChessFigures().remove(chessFigureToKill);
+            System.out.println("KILL");
             return true;
         }else {
             return false;
@@ -76,6 +92,7 @@ public class Pawn extends ChessFigure {
 
     @Override
     public boolean move() {
+        System.out.print("Pawn was " + x_coord + " " + y_coord);
         findAllPath();
         weedOut();
         if (!kill()){
@@ -85,6 +102,7 @@ public class Pawn extends ChessFigure {
             x_coord = location.getX_coord();
             y_coord = location.getY_coord();
         }
+        System.out.println(" / NOW " + x_coord + " " + y_coord);
         return true;
     }
 }
