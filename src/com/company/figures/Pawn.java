@@ -34,10 +34,12 @@ public class Pawn extends ChessFigure {
         for (int i = 0; i<locationsToMove.size() - 1; i++) {
             Location location = locationsToMove.get(i);
 
+            //TODO go out the frame
             if (location.getX_coord() <1 || location.getX_coord() > 8 || location.getY_coord() < 1 || location.getY_coord() > 8) {
                 locationsToMove.remove(location);
                 continue;
             }
+
 
             if ( (location.getX_coord() == x_coord - (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1
                     || location.getX_coord() == x_coord + (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1)) {
