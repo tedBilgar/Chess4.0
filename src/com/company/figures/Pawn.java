@@ -19,6 +19,7 @@ public class Pawn extends ChessFigure {
 
     @Override
     public void findAllPath() {
+        locationsToMove.clear();
         locationsToMove.add(new Location(x_coord - (sideCoeff)*1,y_coord+(sideCoeff)*1));
         locationsToMove.add(new Location(x_coord,y_coord+(sideCoeff)*1));
         locationsToMove.add(new Location(x_coord,y_coord+(sideCoeff)*2));
@@ -30,7 +31,7 @@ public class Pawn extends ChessFigure {
     public void weedOut() {
         System.out.println("here");
         System.out.println(locationsToMove);
-        for (int i = 0; i<locationsToMove.size() -1; i++) {
+        for (int i = 0; i<locationsToMove.size() - 1; i++) {
             Location location = locationsToMove.get(i);
 
             if (location.getX_coord() <1 || location.getX_coord() > 8 || location.getY_coord() < 1 || location.getY_coord() > 8) {
@@ -40,11 +41,14 @@ public class Pawn extends ChessFigure {
 
             if ( (location.getX_coord() == x_coord - (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1
                     || location.getX_coord() == x_coord + (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1)) {
-                Optional<ChessFigure> chessFigure = Optional.ofNullable(chess.getChessFigureByCoord(location));
-                if (chessFigure.isPresent() && this.side == chessFigure.get().getSide() || !chessFigure.isPresent()){
+                if (chess.getChessFigureByCoord(location) == null) {
+                    locationsToMove.remove(location);
+                    continue;
+                } else if (chess.getChessFigureByCoord(location).getSide() == this.side){
                     locationsToMove.remove(location);
                     continue;
                 }
+
             }
 
             if ( location.getX_coord() == x_coord && (location.getY_coord() == y_coord + (sideCoeff)*1 || location.getY_coord() == y_coord + (sideCoeff)*2)
