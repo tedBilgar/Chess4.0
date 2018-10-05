@@ -17,6 +17,7 @@ public class Rook extends ChessFigure {
 
     public Rook(int x_coord, int y_coord, Side side, Chess chess) {
         super(x_coord, y_coord, side, chess);
+        gameValue = 5;
     }
 
     @Override
@@ -71,14 +72,24 @@ public class Rook extends ChessFigure {
             if (i == 0) bufferList = firstListOfLocations;
             if ( i == 1) bufferList = secondListOfLocations;
             if (i == 2) bufferList = thirdListOfLocations;
-            if (i == 3) bufferList = firstListOfLocations;
+            if (i == 3) bufferList = foursListOfLocations;
 
             for (Location location:
                     bufferList) {
-                if (chess.getChessFigureByCoord(location) != null) bufferList.removeAll(bufferList.subList(bufferList.indexOf(location),bufferList.size()));
+                if (chess.getChessFigureByCoord(location) != null){
+                    if (chess.getChessFigureByCoord(location).getSide() == this.side) {
+                        bufferList.removeAll(bufferList.subList(bufferList.indexOf(location), bufferList.size()));
+                        break;
+                    }
+                    else {
+                        bufferList.removeAll(bufferList.subList(bufferList.indexOf(location) + 1,bufferList.size()));
+                        break;
+                    }
+                }
             }
             locationsToMove.addAll(bufferList);
         }
+        System.out.println("after weed " + locationsToMove);
     }
 
     @Override
