@@ -7,6 +7,7 @@ import com.company.types.Side;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class Rook extends ChessFigure {
     private List<Location> firstListOfLocations;
@@ -76,12 +77,39 @@ public class Rook extends ChessFigure {
                     bufferList) {
                 if (chess.getChessFigureByCoord(location) != null) bufferList.removeAll(bufferList.subList(bufferList.indexOf(location),bufferList.size()));
             }
+            locationsToMove.addAll(bufferList);
         }
     }
 
     @Override
     public boolean kill() {
-        return false;
+        int maxValue = 0;
+        Location locationToKill = null;
+        if (locationsToMove.isEmpty()) return false;
+
+        for (Location location:
+                locationsToMove) {
+            //TODO this null return
+            Optional<ChessFigure> chessFigure = Optional.ofNullable(chess.getChessFigureByCoord(location));
+
+            if (chessFigure.isPresent() && chessFigure.get().getSide() != this.side){
+                int curValue = chessFigure.get().getGameValue();
+                if (curValue > maxValue) {
+                    maxValue = curValue;
+                    locationToKill = location;
+                }
+            }
+        }
+        if (maxValue != 0) {
+            ChessFigure chessFigureToKill = chess.getChessFigureByCoord(locationToKill);
+            this.x_coord = chessFigureToKill.getX_coord();
+            this.y_coord = chessFigureToKill.getY_coord();
+            chess.getChessFigures().remove(chessFigureToKill);
+            System.out.println("KILL");
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override

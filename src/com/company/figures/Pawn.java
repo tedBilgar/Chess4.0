@@ -91,7 +91,7 @@ public class Pawn extends ChessFigure {
             Optional<ChessFigure> chessFigure = Optional.ofNullable(chess.getChessFigureByCoord(location));
             if (chessFigure.isPresent()) {
                 int curValue = chessFigure.get().getGameValue();
-                if(chessFigure.get().getX_coord() ==  (this.x_coord - (sideCoeff) * 1)||chessFigure.get().getX_coord() ==  (this.x_coord + (sideCoeff) * 1)
+                if( (chessFigure.get().getX_coord() ==  (this.x_coord - (sideCoeff) * 1)||chessFigure.get().getX_coord() ==  (this.x_coord + (sideCoeff) * 1))
                         && chessFigure.get().getY_coord() == (this.y_coord + (sideCoeff) *1)) {
                     if (curValue > maxValue) {
                         maxValue = curValue;
