@@ -42,7 +42,7 @@ public class Chess {
 */
         while(true){
             Random random = new Random();
-            chessFigure = getChessFigures().get(random.nextInt(getChessFigures().size() - 1));
+            chessFigure = getChessFigures().get(random.nextInt(getChessFigures().size()));
             if(chessFigure.getSide() == this.whoTurns && chessFigure.move()) break;
         }
     }
@@ -52,6 +52,7 @@ public class Chess {
         boolean sameSide = true;
 
         if (chessFigures.isEmpty() || chessFigures.size() == 1 ) return true;
+
 
         Side side = chessFigures.get(0).getSide();
         for (ChessFigure chessFigure:

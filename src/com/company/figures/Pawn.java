@@ -4,6 +4,8 @@ import com.company.board.Chess;
 import com.company.board.Location;
 import com.company.types.Side;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -20,45 +22,59 @@ public class Pawn extends ChessFigure {
     @Override
     public void findAllPath() {
         locationsToMove.clear();
+        if (this.side == Side.WHITE && this.y_coord == 1 || this.side == Side.BLACK && this.y_coord ==4)
+            locationsToMove.add(new Location(x_coord,y_coord+(sideCoeff)*2));
         locationsToMove.add(new Location(x_coord - (sideCoeff)*1,y_coord+(sideCoeff)*1));
         locationsToMove.add(new Location(x_coord,y_coord+(sideCoeff)*1));
-        locationsToMove.add(new Location(x_coord,y_coord+(sideCoeff)*2));
         locationsToMove.add(new Location(x_coord+(sideCoeff)*1,y_coord+(sideCoeff)*1));
     }
 
     //TODO with null
     @Override
     public void weedOut() {
-        System.out.println("here");
+        System.out.print("here");
         System.out.println(locationsToMove);
-        for (int i = 0; i<locationsToMove.size() - 1; i++) {
-            Location location = locationsToMove.get(i);
+        List<Location> locationsToDelete = new ArrayList<>();
+        for (Location location:
+             locationsToMove) {
 
             //TODO go out the frame
-            if (location.getX_coord() <1 || location.getX_coord() > 8 || location.getY_coord() < 1 || location.getY_coord() > 8) {
-                locationsToMove.remove(location);
+            if (location.getX_coord() < 1 || location.getX_coord() > 8 || location.getY_coord() < 1 || location.getY_coord() > 8) {
+                locationsToDelete.add(location);
                 continue;
             }
 
 
-            if ( (location.getX_coord() == x_coord - (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1
-                    || location.getX_coord() == x_coord + (sideCoeff) * 1 && location.getY_coord() == y_coord + (sideCoeff) * 1)) {
+            if ( (location.getX_coord() == x_coord - (sideCoeff) * 1 || location.getX_coord() == x_coord + (sideCoeff) * 1)
+                    && location.getY_coord() == y_coord + (sideCoeff) * 1) {
                 if (chess.getChessFigureByCoord(location) == null) {
-                    locationsToMove.remove(location);
+                    locationsToDelete.add(location);
                     continue;
                 } else if (chess.getChessFigureByCoord(location).getSide() == this.side){
-                    locationsToMove.remove(location);
+                    locationsToDelete.add(location);
                     continue;
                 }
 
             }
 
-            if ( location.getX_coord() == x_coord && (location.getY_coord() == y_coord + (sideCoeff)*1 || location.getY_coord() == y_coord + (sideCoeff)*2)
-                && chess.getChessFigureByCoord(location)!=null) {
-                locationsToMove.remove(location);
+            if (location.getX_coord() == x_coord && location.getY_coord() == y_coord + (sideCoeff) * 1
+                    && chess.getChessFigureByCoord(location) != null) {
+                locationsToDelete.add(location);
+                for (Location addLocation:
+                     locationsToMove) {
+                    if (addLocation.getX_coord() == x_coord && addLocation.getY_coord() == y_coord + (sideCoeff) * 2) {
+                        locationsToDelete.add(addLocation);
+                        break;
+                    }
+                }
                 continue;
             }
+            if (location.getX_coord() == x_coord && location.getY_coord() == y_coord + (sideCoeff)*2
+                    && chess.getChessFigureByCoord(location) !=null && !locationsToDelete.contains(location))
+                locationsToDelete.add(location);
         }
+
+        locationsToMove.removeAll(locationsToDelete);
         System.out.println("after weed " + locationsToMove);
 
     }
@@ -103,8 +119,8 @@ public class Pawn extends ChessFigure {
         weedOut();
         if (!kill()){
             if (locationsToMove.isEmpty()) return false;
-            Random random =new Random();
-            Location location = locationsToMove.get(random.nextInt(locationsToMove.size()-1));
+            Random random = new Random();
+            Location location = locationsToMove.get(random.nextInt(locationsToMove.size()));
             x_coord = location.getX_coord();
             y_coord = location.getY_coord();
         }
