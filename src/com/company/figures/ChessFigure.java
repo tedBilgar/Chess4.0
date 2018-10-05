@@ -51,6 +51,8 @@ public abstract class ChessFigure {
         return gameValue;
     }
 
+    // Реализовать функции по дефолту
+    // при небольшом изменении функций, их переопределяют в определенных классах
     public abstract void findAllPath();
     public abstract void weedOut();
     public abstract boolean kill();

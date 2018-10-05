@@ -65,7 +65,6 @@ public class Rook extends ChessFigure {
 
     @Override
     public void weedOut() {
-        List<Location> locationsToDelete = new ArrayList<>();
         List<Location> bufferList = new ArrayList<>();
 
         for(int i = 0; i < 4; i ++){
@@ -94,6 +93,7 @@ public class Rook extends ChessFigure {
 
     @Override
     public boolean kill() {
+        //TODO with pawn kill
         int maxValue = 0;
         Location locationToKill = null;
         if (locationsToMove.isEmpty()) return false;
