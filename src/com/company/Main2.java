@@ -14,7 +14,7 @@ public class Main2 {
         chess.getChessFigures().add(chessFigure2);
         chessFigure.findAllPath();
         chessFigure.weedOut();
-        chessFigure.kill();
+        //chessFigure.kill();
         System.out.println(chessFigure + " " + chessFigure2);
     }
 }

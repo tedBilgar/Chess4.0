@@ -4,10 +4,7 @@ import com.company.board.Chess;
 import com.company.board.Location;
 import com.company.types.Side;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class ChessFigure {
     protected int x_coord;
@@ -26,7 +23,6 @@ public abstract class ChessFigure {
         this.side = side;
         this.chess = chess;
         locationsToMove = new LinkedList<>();
-
     }
 
     public int getX_coord() {
@@ -53,36 +49,43 @@ public abstract class ChessFigure {
         return gameValue;
     }
 
-    // Реализовать функции по дефолту
-    // при небольшом изменении функций, их переопределяют в определенных классах
 
-    // найти все пути (абстрактно для всех фигур)
     public abstract void findAllPath();
-    //
+
+    //is Done
     public void weedOut(){
-        List<Location> bufferList = new ArrayList<>();
+        List<Location> bufferList;
+        List<Location> listForDelete = new ArrayList<>();
+        int startIndex = 0;
 
         for (List<Location> listOfLocation:
                 listOfListsOfLocations) {
             bufferList = listOfLocation;
-
             for (Location location:
                     bufferList) {
                 if (chess.getChessFigureByCoord(location) != null){
                     if (chess.getChessFigureByCoord(location).getSide() == this.side) {
-                        bufferList.removeAll(bufferList.subList(bufferList.indexOf(location), bufferList.size()));
+                        //bufferList.removeAll(bufferList.subList(bufferList.indexOf(location), bufferList.size()));
+                        startIndex = bufferList.indexOf(location);
                         break;
                     }
                     else {
-                        bufferList.removeAll(bufferList.subList(bufferList.indexOf(location) + 1,bufferList.size()));
+                        //bufferList.removeAll(bufferList.subList(bufferList.indexOf(location) + 1,bufferList.size()));
+                        startIndex = bufferList.indexOf(location) + 1;
                         break;
                     }
                 }
             }
+            if (startIndex != 0)
+            bufferList.removeAll(bufferList.subList(startIndex,bufferList.size()));
             locationsToMove.addAll(bufferList);
         }
+
+        System.out.println("weed " + locationsToMove);
     }
-    public boolean kill(){
+
+    //is Done
+    public boolean findLocationToKill(){
         int maxValue = 0;
         Location locationToKill = null;
         if (locationsToMove.isEmpty()) return false;
@@ -101,17 +104,36 @@ public abstract class ChessFigure {
             }
         }
         if (maxValue != 0) {
-            ChessFigure chessFigureToKill = chess.getChessFigureByCoord(locationToKill);
-            this.x_coord = chessFigureToKill.getX_coord();
-            this.y_coord = chessFigureToKill.getY_coord();
-            chess.getChessFigures().remove(chessFigureToKill);
-            System.out.println("KILL");
+            kill(locationToKill);
             return true;
         }else {
             return false;
         }
     }
-    public abstract boolean move();
+
+    //is Done
+    public void kill(Location locationToKill){
+        ChessFigure chessFigureToKill = chess.getChessFigureByCoord(locationToKill);
+        this.x_coord = chessFigureToKill.getX_coord();
+        this.y_coord = chessFigureToKill.getY_coord();
+        chess.getChessFigures().remove(chessFigureToKill);
+        System.out.println("afterkill " + x_coord + " " + y_coord);
+    }
+
+    //is Done
+    public boolean move() {
+        findAllPath();
+        weedOut();
+        if (!findLocationToKill()){
+            if (locationsToMove.isEmpty()) return false;
+            Random random = new Random();
+            Location location = locationsToMove.get(random.nextInt(locationsToMove.size()));
+            x_coord = location.getX_coord();
+            y_coord = location.getY_coord();
+        }
+        System.out.println("move is Done + " +x_coord +" " + y_coord);
+        return true;
+    }
 
     @Override
     public String toString() {

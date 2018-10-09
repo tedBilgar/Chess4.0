@@ -6,8 +6,6 @@ import com.company.types.Side;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 public class Pawn extends ChessFigure {
 
@@ -79,7 +77,7 @@ public class Pawn extends ChessFigure {
 
     }
 
-    @Override
+/*    @Override
     public boolean kill() {
         int maxValue = 0;
         Location locationToKill = null;
@@ -110,21 +108,6 @@ public class Pawn extends ChessFigure {
         }else {
             return false;
         }
-    }
+    }*/
 
-    @Override
-    public boolean move() {
-        System.out.print("Pawn was " + x_coord + " " + y_coord);
-        findAllPath();
-        weedOut();
-        if (!kill()){
-            if (locationsToMove.isEmpty()) return false;
-            Random random = new Random();
-            Location location = locationsToMove.get(random.nextInt(locationsToMove.size()));
-            x_coord = location.getX_coord();
-            y_coord = location.getY_coord();
-        }
-        System.out.println(" / NOW " + x_coord + " " + y_coord);
-        return true;
-    }
 }

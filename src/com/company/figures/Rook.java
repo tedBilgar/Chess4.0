@@ -4,15 +4,16 @@ import com.company.board.Chess;
 import com.company.board.Location;
 import com.company.types.Side;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Rook extends ChessFigure {
 
     public Rook(int x_coord, int y_coord, Side side, Chess chess) {
         super(x_coord, y_coord, side, chess);
+
+        if (this.side == Side.WHITE) sideCoeff = 1;
+            else sideCoeff = -1;
+
         gameValue = 5;
         listOfListsOfLocations = new LinkedList<>();
     }
@@ -20,6 +21,7 @@ public class Rook extends ChessFigure {
     @Override
     public void findAllPath() {
         locationsToMove.clear();
+        listOfListsOfLocations.clear();
 
         for (int i = 0;i<4;i++) {
             listOfListsOfLocations.add(new LinkedList<Location>());
@@ -28,7 +30,7 @@ public class Rook extends ChessFigure {
         List<Location> bufferList = null;
         int x_coeff = 1;
         int y_coeff = 1;
-        for(int i = 0;i < 4;i ++) {
+        for(int i = 0;i < 4;i++) {
             if (i == 0) {
                 x_coeff = 1;
                 y_coeff = 1;
@@ -53,12 +55,6 @@ public class Rook extends ChessFigure {
                 bufferList.add(new Location(x_coord + (x_coeff) * x, y_coord +(y_coeff) * y));
             }
         }
-
-    }
-
-
-    @Override
-    public boolean move() {
-        return false;
+        System.out.println("findAll: " + x_coord +"-" + y_coord + " "+ listOfListsOfLocations);
     }
 }
